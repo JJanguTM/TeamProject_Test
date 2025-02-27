@@ -1,0 +1,8 @@
+﻿lineID,dialogueType,charName,charPortrait,line,nextLine
+LN010100,normal,미오,mio.png,배고프다,
+,,,,저녁 뭐 먹을래?,LN010102
+LN010102,answer,플레이어,player.png,짜장면,LN010104
+LN010103,answer,플레이어,player.png,짬뽕,LN010105
+LN010104,normal,미오,mio.png,어제 먹었어…,LN010106
+LN010105,normal,미오,mio.png,매운 거 못먹어…,LN010106
+LN010106,normal,미오,mio.png,먹을게 하나도 없네…,-1
