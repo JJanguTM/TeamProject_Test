@@ -51,6 +51,8 @@ namespace STM
                 {
                     Hor_ActivateObject(obj);
                     Ver_ActivateObject(obj);
+                    Disable_ActivateObject(obj);
+
                 }
             }
         }
@@ -78,6 +80,14 @@ namespace STM
           
         }
 
+        private void Disable_ActivateObject(GameObject obj)
+        {
+            Disable disableScript = obj.GetComponent<Disable>();
+            if (disableScript != null)
+            {
+                disableScript.ToggleActiveState(!isLeverOn);
+            }
+        }
         public void ToggleLever() //검정레버
         {
             if (CompareTag("BlackLever"))

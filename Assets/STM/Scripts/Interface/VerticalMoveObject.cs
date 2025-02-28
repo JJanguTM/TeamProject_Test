@@ -16,8 +16,8 @@ namespace STM
         private Rigidbody2D rb;
         private float downBound;
         private float upBound;
-        private int direction = -1;        // ÇöÀç ÀÌµ¿ ¹æÇâ (-1: ¿ÞÂÊ, +1: ¿À¸¥ÂÊ)
-        private bool isActivated = false;  // Lever ON/OFF »óÅÂ
+        private int direction = -1;        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ (-1: ï¿½ï¿½ï¿½ï¿½, +1: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+        private bool isActivated = false;  // Lever ON/OFF ï¿½ï¿½ï¿½ï¿½
 
         private void Start()
         {
@@ -56,10 +56,10 @@ namespace STM
             }
         }
 
-
         public void ToggleMovement(bool state)
         {
             isActivated = state;
         }
+
     }
 }
