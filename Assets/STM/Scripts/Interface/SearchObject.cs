@@ -1,11 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class SearchObject : MonoBehaviour
 {
     [SerializeField] private GameObject takeALookUI; // ✅ UI 오브젝트 (Canvas 내 `TakeALook`)
-    private bool isPlayerInRange = false; // ✅ 플레이어가 상호작용 범위 안에 있는지 확인
+    [SerializeField] private Text descriptionText; // ✅ UI 내 Text 컴포넌트
+    [SerializeField] private SearchObjectData searchData; // ✅ 스크립터블 오브젝트 (각각의 설명 데이터)
+
+    private bool isPlayerInRange = false;
 
     private void Start()
     {
@@ -17,7 +19,7 @@ public class SearchObject : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerInRange && Input.GetKeyDown(KeyCode.F)) // ✅ 상호작용 키 (F)를 누르면
+        if (isPlayerInRange && Input.GetKeyDown(KeyCode.F))
         {
             ToggleUI(); // ✅ UI 활성화/비활성화
         }
@@ -28,13 +30,19 @@ public class SearchObject : MonoBehaviour
         if (takeALookUI != null)
         {
             bool isActive = takeALookUI.activeSelf;
-            takeALookUI.SetActive(!isActive); // 현재 상태 반전
+            takeALookUI.SetActive(!isActive); // ✅ UI 활성화/비활성화
+
+            // ✅ UI가 활성화될 때만 설명 텍스트 업데이트
+            if (!isActive && searchData != null && descriptionText != null)
+            {
+                descriptionText.text = searchData.description;
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) // ✅ 플레이어가 SearchObject 범위에 들어옴
+        if (other.CompareTag("Player"))
         {
             isPlayerInRange = true;
         }
@@ -42,12 +50,12 @@ public class SearchObject : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) // ✅ 플레이어가 범위를 벗어나면
+        if (other.CompareTag("Player"))
         {
             isPlayerInRange = false;
             if (takeALookUI != null)
             {
-                takeALookUI.SetActive(false); // ✅ 자동으로 UI 숨김
+                takeALookUI.SetActive(false);
             }
         }
     }

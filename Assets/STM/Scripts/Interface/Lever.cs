@@ -85,7 +85,7 @@ namespace STM
             Disable disableScript = obj.GetComponent<Disable>();
             if (disableScript != null)
             {
-                disableScript.ToggleActiveState(!isLeverOn);
+                disableScript.ToggleActiveState(isLeverOn);
             }
         }
         public void ToggleLever() //검정레버

@@ -1464,6 +1464,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takeALookUI: {fileID: 2106704423}
+  descriptionText: {fileID: 1832748248}
+  searchData: {fileID: 11400000, guid: 6f3e772f6b032ca47b071d05f96f12ae, type: 2}
 --- !u!61 &278915586
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1955,6 +1957,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takeALookUI: {fileID: 2106704423}
+  descriptionText: {fileID: 1832748248}
+  searchData: {fileID: 11400000, guid: 966b8c91c5a4c3843a7165b36491da31, type: 2}
 --- !u!61 &296564303
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3030,6 +3034,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takeALookUI: {fileID: 2106704423}
+  descriptionText: {fileID: 1832748248}
+  searchData: {fileID: 11400000, guid: 7d4a6a7e35bcfb348a278cf1b186eede, type: 2}
 --- !u!61 &449891902
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -38002,7 +38008,7 @@ Transform:
   m_GameObject: {fileID: 650783759}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 44.2, y: -49.7, z: 0}
+  m_LocalPosition: {x: 36.54, y: -46.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -39204,6 +39210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takeALookUI: {fileID: 2106704423}
+  descriptionText: {fileID: 1832748248}
+  searchData: {fileID: 11400000, guid: 662bbae5ec2d8ef47aa4e747366b2b34, type: 2}
 --- !u!61 &971992572
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -41178,6 +41186,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takeALookUI: {fileID: 2106704423}
+  descriptionText: {fileID: 1832748248}
+  searchData: {fileID: 11400000, guid: d279e4ce127171a4d93ef2f44a12aa0c, type: 2}
 --- !u!61 &1266486328
 BoxCollider2D:
   m_ObjectHideFlags: 0

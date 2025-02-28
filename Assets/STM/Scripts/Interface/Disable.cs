@@ -2,22 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Disable : MonoBehaviour
+namespace STM
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Disable : MonoBehaviour
     {
-        
-    }
+        private bool isActivated = false;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public void ToggleActiveState(bool state)
-    {
-        gameObject.SetActive(state);
-        Debug.Log($"{gameObject.name}가 {(state ? "활성화" : "비활성화")}되었습니다!");
+        // 시작 시점에서 현재 상태에 맞게 설정
+        private void Start()
+        {
+            gameObject.SetActive(isActivated);
+        }
+
+        // 외부에서 활성/비활성 요청을 받을 때마다 즉시 적용
+        public void ToggleActiveState(bool state)
+        {
+            isActivated = state;
+            gameObject.SetActive(isActivated);
+        }
     }
 }
