@@ -10,9 +10,11 @@ namespace STM
         [SerializeField]
         private List<STM.ManyToOneLever> leverList;
 
+        private bool isActivated = true;
+
         void Start()
         {
-            // ÇÊ¿ä¿¡ µû¶ó ÃÊ±âÈ­ ·ÎÁ÷
+            gameObject.SetActive(isActivated);
         }
 
         void Update()
@@ -37,8 +39,8 @@ namespace STM
 
             if (allOn)
             {
-              
-                Debug.Log("¸ðµç Lever°¡ On »óÅÂ! ManyToOneObject ±â´É ½ÇÇà!");
+                gameObject.SetActive(!isActivated);
+                Debug.Log("ï¿½ï¿½ï¿½ Leverï¿½ï¿½ On ï¿½ï¿½ï¿½ï¿½! ManyToOneObject ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
             }
             else
             {

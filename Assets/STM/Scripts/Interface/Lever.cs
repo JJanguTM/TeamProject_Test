@@ -31,7 +31,6 @@ namespace STM
             }
 
             UpdateLeverColor();
-            
         }
 
         private void UpdateLeverColor()
@@ -44,6 +43,7 @@ namespace STM
         {
             isLeverOn = !isLeverOn;
             Debug.Log(isLeverOn ? "Lever가 켜졌습니다!" : "Lever가 꺼졌습니다!");
+            FlipSprite(); // 상호작용 시 레버의 스프라이트가 x축을 기준으로 반전이 됩니다
 
             if (isActivated)
             {
@@ -52,7 +52,6 @@ namespace STM
                     Hor_ActivateObject(obj);
                     Ver_ActivateObject(obj);
                     Disable_ActivateObject(obj);
-
                 }
             }
         }
@@ -99,6 +98,10 @@ namespace STM
             }
         }
 
+        private void FlipSprite() // 레버와 상호작용 시 레버 스프라이트의 방향을 바꾸는 메서드입니다 by 휘익
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
        
     }
 }

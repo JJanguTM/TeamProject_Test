@@ -9,9 +9,13 @@ namespace STM
     
         private bool isLeverOn = false;
 
+        private SpriteRenderer spriteRenderer;
+        private Color redColor = Color.red;
+
         void Start()
         {
-         
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = redColor;
         }
 
         void Update()
@@ -23,14 +27,15 @@ namespace STM
         {
            
             isLeverOn = !isLeverOn;
+            FlipSprite();
 
             if (isLeverOn)
             {
-                Debug.Log("Lever╟║ On ╩Себ╟║ ╣г╬З╫ю╢о╢ы.");
+                Debug.Log("LeverО©╫О©╫ On О©╫О©╫О©╫б╟О©╫ О©╫г╬О©╫О©╫О©╫О©╫о╢О©╫.");
             }
             else
             {
-                Debug.Log("Lever╟║ Off ╩Себ╟║ ╣г╬З╫ю╢о╢ы.");
+                Debug.Log("LeverО©╫О©╫ Off О©╫О©╫О©╫б╟О©╫ О©╫г╬О©╫О©╫О©╫О©╫о╢О©╫.");
             }
         }
 
@@ -38,6 +43,11 @@ namespace STM
         public bool IsOn
         {
             get { return isLeverOn; }
+        }
+
+        private void FlipSprite() // К═┬К╡└Л≥─ Л┐│М≤╦Л·▒Л ╘ Л▀° К═┬К╡└ Л┼╓М■└К²╪Л²╢М┼╦Л²≤ К╟╘М√╔Л²└ К╟■Й╬╦К┼■ К╘■Л└°К⌠°Л·┘К▀┬К▀╓ by М°≤Л²╣
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
         }
     }
 }

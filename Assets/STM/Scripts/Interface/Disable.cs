@@ -6,19 +6,19 @@ namespace STM
 {
     public class Disable : MonoBehaviour
     {
-        private bool isActivated = false;
+        private bool isActivated = true;
 
-        // ½ÃÀÛ ½ÃÁ¡¿¡¼­ ÇöÀç »óÅÂ¿¡ ¸Â°Ô ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½
         private void Start()
         {
             gameObject.SetActive(isActivated);
         }
 
-        // ¿ÜºÎ¿¡¼­ È°¼º/ºñÈ°¼º ¿äÃ»À» ¹ÞÀ» ¶§¸¶´Ù Áï½Ã Àû¿ë
+        // ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ È°ï¿½ï¿½/ï¿½ï¿½È°ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         public void ToggleActiveState(bool state)
         {
             isActivated = state;
-            gameObject.SetActive(isActivated);
+            gameObject.SetActive(!isActivated);
         }
     }
 }
