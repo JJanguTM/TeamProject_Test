@@ -785,6 +785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 434420493}
+  delay: 1
 --- !u!61 &134380914
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2462,6 +2463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 1086297390}
+  delay: 1
 --- !u!61 &350536352
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3102,6 +3104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 134380911}
+  delay: 1
 --- !u!61 &434420496
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3963,7 +3966,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -38696,7 +38699,7 @@ Transform:
   m_GameObject: {fileID: 650783759}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.8, y: -23.52, z: 0}
+  m_LocalPosition: {x: 71.3, y: -15.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -38874,6 +38877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 1129454485}
+  delay: 1
 --- !u!61 &677650507
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39556,6 +39560,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 932999784}
+  delay: 1
 --- !u!61 &865518170
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39846,6 +39851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 865518167}
+  delay: 1
 --- !u!61 &932999787
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -41206,6 +41212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 350536349}
+  delay: 1
 --- !u!61 &1086297393
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -41786,6 +41793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 677650504}
+  delay: 1
 --- !u!61 &1129454487
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -42924,7 +42932,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1330215147}
   m_Layer: 7
-  m_Name: doors
+  m_Name: Teleport_doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

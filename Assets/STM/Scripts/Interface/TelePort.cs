@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,23 +7,68 @@ namespace STM
     public class Teleport : MonoBehaviour, IInteractable
     {
         [Header("Teleport Settings")]
-        [SerializeField] private Transform teleportOutput; // ÅÚ·¹Æ÷Æ® Ãâ·Â À§Ä¡
-    
+        [SerializeField] private Transform teleportOutput;
 
+        [SerializeField] private int delay = 1;// í…”ë ˆí¬íŠ¸ ì¶œë ¥ ìœ„ì¹˜
+
+        private Camera mainCamera;
+        private PlayerController playerController;
+        private bool isTeleporting = false;
+        private float teleportStartTime = 0f;
+        private void Start()
+        {
+            mainCamera = Camera.main;
+            playerController = FindObjectOfType<PlayerController>();
+
+            if (mainCamera == null)
+                Debug.LogError("ë©”ì¸ ì¹´ë©”ë¼ê°€ ì—†ìŠµë‹ˆë‹¤!");
+
+            if (playerController == null)
+                Debug.LogError("PlayerControllerê°€ ì—†ìŠµë‹ˆë‹¤!");
+        }
+
+        private void Update()
+        {
+            if (isTeleporting)
+            {
+                float elapsedTime = Time.time - teleportStartTime;
+
+                if (elapsedTime >= delay)
+                {
+                   
+                    playerController.transform.position = teleportOutput.position;
+
+                   
+                    mainCamera.cullingMask = -1; 
+
+                 
+                    playerController.enabled = true;
+
+           
+                    isTeleporting = false;
+                }
+            }
+        }
         public void OnInteract()
         {
-            if (teleportOutput != null)
+            if (teleportOutput != null && mainCamera != null && playerController != null && !isTeleporting)
             {
-                // PlayerÀÇ Transform À§Ä¡¸¦ ÅÚ·¹Æ÷Æ® Ãâ·Â À§Ä¡·Î ÀÌµ¿
-                Transform playerTransform = FindObjectOfType<PlayerController>().transform;
-                playerTransform.position = teleportOutput.position;
-
+               
+                isTeleporting = true;
+                teleportStartTime = Time.time;
+                playerController.enabled = false;
+ 
+                mainCamera.cullingMask = 0; // Nothing
+            }
+            else if (isTeleporting)
+            {
+                Debug.LogWarning("ì´ë¯¸ í…”ë ˆí¬íŠ¸ ì¤‘ì…ë‹ˆë‹¤!");
             }
             else
             {
-                Debug.LogWarning("ÅÚ·¹Æ÷Æ® Ãâ·Â À§Ä¡°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+                Debug.LogWarning("í…”ë ˆí¬íŠ¸ ì¶œë ¥ ìœ„ì¹˜ ë˜ëŠ” ì¹´ë©”ë¼ê°€ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
             }
         }
- 
+
     }
 }
