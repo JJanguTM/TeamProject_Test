@@ -786,6 +786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 434420493}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &134380914
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2464,6 +2465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 1086297390}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &350536352
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3105,6 +3107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 134380911}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &434420496
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4016,7 +4019,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.22998, z: -10}
+  m_LocalPosition: {x: 0, y: 1.2299805, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38699,7 +38702,7 @@ Transform:
   m_GameObject: {fileID: 650783759}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 71.3, y: -15.57, z: 0}
+  m_LocalPosition: {x: 10.41, y: -23.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -38878,6 +38881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 1129454485}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &677650507
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39561,6 +39565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 932999784}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &865518170
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39852,6 +39857,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 865518167}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &932999787
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -40821,6 +40827,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1853774876}
   - {fileID: 650783764}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -41213,6 +41220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 350536349}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &1086297393
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -41794,6 +41802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportOutput: {fileID: 677650504}
   delay: 1
+  teleportadjusted: 0.8
 --- !u!61 &1129454487
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -84753,7 +84762,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1853774876}
   - component: {fileID: 1853774875}
-  m_Layer: 0
+  - component: {fileID: 1853774877}
+  - component: {fileID: 1853774878}
+  - component: {fileID: 1853774879}
+  m_Layer: 7
   m_Name: door_final
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84801,7 +84813,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f5921a71b73f93245b801f3ceacf94c4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fa868fa7fa8c41e4d9421e1ea5e3f04a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -84820,13 +84832,84 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1853774874}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 48, y: -19.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1015679405}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1853774877
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853774874}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.8
+--- !u!95 &1853774878
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853774874}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 99f5b1574e930d044b927603e9f89926, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1853774879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853774874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 549441b7bc3ebf54c8b743205dce9085, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToMove: {fileID: 650783759}
+  animator: {fileID: 1853774878}
+  animationTriggerName: Open
 --- !u!1 &1866491192
 GameObject:
   m_ObjectHideFlags: 0
@@ -86531,7 +86614,6 @@ SceneRoots:
   - {fileID: 116958675}
   - {fileID: 956424794}
   - {fileID: 1330215147}
-  - {fileID: 1853774876}
   - {fileID: 2078861043}
   - {fileID: 820796739}
   - {fileID: 1015679405}

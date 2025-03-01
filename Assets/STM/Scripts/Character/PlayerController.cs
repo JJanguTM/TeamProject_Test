@@ -42,7 +42,11 @@ namespace STM
                 return; 
 
             CheckGrounded();
-            MoveCharacter(InputSystem.Singleton.MoveInput);
+            if (isGrounded)  
+            {
+                MoveCharacter(InputSystem.Singleton.MoveInput);
+            }
+            
         }
 
         private void MoveCharacter(Vector2 direction)

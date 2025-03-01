@@ -15,6 +15,8 @@ namespace STM
         private PlayerController playerController;
         private bool isTeleporting = false;
         private float teleportStartTime = 0f;
+        [SerializeField]
+        private float teleportadjusted = 0.5f;
         private void Start()
         {
             mainCamera = Camera.main;
@@ -35,11 +37,11 @@ namespace STM
 
                 if (elapsedTime >= delay)
                 {
-                   
-                    playerController.transform.position = teleportOutput.position;
 
-                   
-                    mainCamera.cullingMask = -1; 
+                    playerController.transform.position = new Vector3(teleportOutput.position.x, teleportOutput.position.y - teleportadjusted, teleportOutput.position.z);
+
+
+                   mainCamera.cullingMask = -1; 
 
                  
                     playerController.enabled = true;
@@ -51,14 +53,14 @@ namespace STM
         }
         public void OnInteract()
         {
-            if (teleportOutput != null && mainCamera != null && playerController != null && !isTeleporting)
+            if (teleportOutput != null)
             {
                
                 isTeleporting = true;
                 teleportStartTime = Time.time;
                 playerController.enabled = false;
  
-                mainCamera.cullingMask = 0; // Nothing
+               mainCamera.cullingMask = 0; // Nothing
             }
             else if (isTeleporting)
             {
