@@ -12,6 +12,7 @@ namespace STM
         [SerializeField] private float groundadjusted = 0.1f;
         [SerializeField] private float jumpForce = 5f;
         [SerializeField] private float speed = 3f;
+        private DialogueManager dialogueManager;
 
         private Rigidbody2D rb;
         private bool isGrounded;
@@ -21,15 +22,25 @@ namespace STM
         {
             rb = GetComponent<Rigidbody2D>();
             ani = GetComponent<Animator>();
+            dialogueManager = FindObjectOfType<DialogueManager>();
         }
 
         private void Update()
         {
+            if (dialogueManager.IsConversationActive)
+            {
+                ani.SetBool("IsRun", false);
+                rb.velocity = new Vector2(0, rb.velocity.y);  // 이동 정지
+                return;
+            }
             HandleJump();
         }
 
         private void FixedUpdate()
         {
+            if (dialogueManager.IsConversationActive)
+                return; 
+
             CheckGrounded();
             MoveCharacter(InputSystem.Singleton.MoveInput);
         }

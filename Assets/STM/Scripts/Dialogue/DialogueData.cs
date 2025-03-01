@@ -1,5 +1,4 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,52 +6,32 @@ namespace STM
 {
     public class DialogueData : MonoBehaviour
     {
-        [SerializeField] private string csvFileName;
+        [SerializeField] private TextAsset csvFile;
+        private Dictionary<string, List<Dialogue>> dialogueDict;  // 중복 허용을 위한 Dictionary
 
-        private Dialogue[] dialogues;
-        private Dictionary<string, Dialogue> dialogueDict;
-
-        private void Start()
+        private void Awake()
         {
-            dialogues = ParseCSV(csvFileName);
-
-            dialogueDict = new Dictionary<string, Dialogue>();
-            foreach (Dialogue D in dialogues)
-            {
-                if (!dialogueDict.ContainsKey(D.LineID))
-                    dialogueDict.Add(D.LineID, D);
-            }
+            dialogueDict = new Dictionary<string, List<Dialogue>>();
+            ParseCSV();
         }
 
-        private Dialogue[] ParseCSV(string csvFileName)
+        private void ParseCSV()
         {
-            TextAsset csvData = Resources.Load<TextAsset>(csvFileName);
-            if (csvData == null)
+            if (csvFile == null)
             {
-                Debug.LogError($"CSV ������ �����ϴ�: {csvFileName}");
-                return Array.Empty<Dialogue>();
+                Debug.LogError("CSV 파일이 지정되지 않았습니다!");
+                return;
             }
 
-            string[] rows = csvData.text.Split('\n');
-           
-            int dialogueCount = 0;
-            for (int i = 1; i < rows.Length; i++)
+
+            string[] rows = csvFile.text.Split('\n');
+            int i = 1; // 0번줄은 헤더
+            while (i < rows.Length)
             {
-                string[] cols = rows[i].Split(',');
-                if (cols.Length >= 5 && !string.IsNullOrWhiteSpace(cols[0]))
-                {
-                    dialogueCount++;
-                }
-            }
+                string row = rows[i];
+                string[] cols = row.Split(',');
 
-            Dialogue[] result = new Dialogue[dialogueCount];
-            int index = 0;
-
-            for (int i = 1; i < rows.Length;)
-            {
-                string[] cols = rows[i].Split(',');
-
-                if (cols.Length < 5 || string.IsNullOrWhiteSpace(cols[0]))
+                if (cols.Length < 6 || string.IsNullOrWhiteSpace(cols[0]))
                 {
                     i++;
                     continue;
@@ -61,83 +40,74 @@ namespace STM
                 string lineID = cols[0].Trim();
                 string dialogueType = cols[1].Trim();
                 string charName = cols[2].Trim();
-                string nextLine = cols[4].Trim();
+                string charPortrait = cols[3].Trim();
+                string firstLine = cols[4].Trim().Trim('"');
+                string nextLine = cols[5].Trim();
 
                 List<string> lines = new List<string>();
+                if (!string.IsNullOrEmpty(firstLine))
+                    lines.Add(firstLine);
 
-                do
+                i++;
+                while (i < rows.Length)
                 {
-                   
-                    if (!string.IsNullOrWhiteSpace(cols[3]))
+                    string[] nextCols = rows[i].Split(',');
+                    if (nextCols.Length < 6)
                     {
-                        lines.Add(cols[3].Trim());
+                        i++;
+                        continue;
                     }
+                    if (!string.IsNullOrWhiteSpace(nextCols[0]))
+                        break;
+
+                    string extraLine = nextCols[4].Trim().Trim('"');
+                    if (!string.IsNullOrEmpty(extraLine))
+                        lines.Add(extraLine);
 
                     i++;
-                    if (i < rows.Length)
-                    {
-                        cols = rows[i].Split(',');
-                    }
-                    else break;
                 }
-                while (string.IsNullOrWhiteSpace(cols[0])); 
 
-                Dialogue D = new Dialogue(
-                    lineID,
-                    dialogueType,
-                    charName,
-                    lines.ToArray(),
-                    nextLine
-                );
+                Dialogue d = new Dialogue(lineID, dialogueType, charName, charPortrait, lines.ToArray(), nextLine);
+                if (!dialogueDict.ContainsKey(lineID))
+                {
+                    dialogueDict[lineID] = new List<Dialogue>();
+                }
+                dialogueDict[lineID].Add(d);
 
-                result[index++] = D;
+   
             }
-
-            return result;
         }
 
-        public Dialogue[] GetAllDialogues()
+        // ✅ 첫 번째 대사 반환하도록 수정!
+        public Dialogue GetDialogueByID(string lineID)
         {
-            return dialogues;
-        }
-
-        public Dialogue GetDialogueById(string lineID)
-        {
-            if (dialogueDict.TryGetValue(lineID, out Dialogue D))
-                return D;
-
+            if (dialogueDict.TryGetValue(lineID, out List<Dialogue> dialogues) && dialogues.Count > 0)
+            {
+                return dialogues[0];  // 🔄 첫 번째 대사 반환
+            }
+        
             return null;
         }
 
-        public List<Dialogue> GetAnswersFrom(string questionLineID)
+        // ✅ 선택지 대사들 반환
+        public List<Dialogue> GetChoiceDialoguesByAnswerID(string answerID)
         {
-            List<Dialogue> answerList = new List<Dialogue>();
-
-            bool questionFound = false;
-            for (int i = 0; i < dialogues.Length; i++)
+            List<Dialogue> choiceDialogues = new List<Dialogue>();
+            if (dialogueDict.TryGetValue(answerID, out List<Dialogue> dialogues))
             {
-                if (dialogues[i].LineID == questionLineID)
+                foreach (Dialogue d in dialogues)
                 {
-                    questionFound = true;
-                    continue;
-                }
-
-                if (questionFound)
-                {
-                    if (dialogues[i].DialogueType == "answer")
-                    {
-                   
-                        answerList.Add(dialogues[i]);
-                    }
-                    else if (dialogues[i].DialogueType == "normal")
-                    {
-                   
-                    break;
-                    }
+                    choiceDialogues.Add(d);
+         
                 }
             }
+            else
+            {
+             
+            }
 
-            return answerList;
+        
+            return choiceDialogues;
         }
     }
 }
