@@ -149,7 +149,7 @@ namespace STM
 
                 if (!string.IsNullOrEmpty(currentDialogue.charPortrait))
                 {
-                    Sprite sp = Resources.Load<Sprite>(currentDialogue.charPortrait);
+                    Sprite sp = Resources.Load<Sprite>("Portraits/" + currentDialogue.charPortrait);
                     if (sp) npcPortraitImage.sprite = sp;
                 }
 
@@ -221,7 +221,7 @@ namespace STM
 
                 if (!string.IsNullOrEmpty(choiceArray[0].charPortrait))
                 {
-                    Sprite playerSprite = Resources.Load<Sprite>(choiceArray[0].charPortrait); // 🔄 CSV에서 charPortrait로 이미지 로드
+                    Sprite playerSprite = Resources.Load<Sprite>("Portraits/" + choiceArray[0].charPortrait); // 🔄 CSV에서 charPortrait로 이미지 로드
                     if (playerSprite)
                         playerPortraitImage.sprite = playerSprite;
                     else
