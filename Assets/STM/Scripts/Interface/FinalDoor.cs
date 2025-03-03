@@ -11,6 +11,7 @@ namespace STM
 
         [Header("🎯 애니메이터")]
         [SerializeField] private Animator animator;
+        [SerializeField] private GameObject ThankyouScreen;
 
         [Header("🎯 실행할 애니메이션 이름")]
         [SerializeField] private string animationTriggerName = "Open";
@@ -63,11 +64,23 @@ namespace STM
             {
                 animator.SetTrigger(animationTriggerName);
                 Debug.Log($"[FinalDoor] {animationTriggerName} 애니메이션 실행!");
+                StartCoroutine(ShowThankyouScreen());
             }
             else
             {
                 Debug.LogWarning("[FinalDoor] 애니메이터 또는 애니메이션 트리거가 설정되지 않았습니다!");
             }
+        }
+
+        private IEnumerator ShowThankyouScreen()
+        {
+            yield return new WaitForSeconds(5.5f);
+            ThankyouScreen.SetActive(true);
+        }
+
+        public void QuitGame()
+        {
+            Application.Quit();
         }
     }
 }

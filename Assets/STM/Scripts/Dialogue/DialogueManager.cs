@@ -24,6 +24,12 @@ namespace STM
         [SerializeField] private Image playerPortraitImage;
         [SerializeField] private Button[] choiceButtons;
         [SerializeField] private Text[] choiceButtonTexts;
+
+        [Header("Options")]
+        [SerializeField] private bool playOnAwake;
+        [SerializeField] private string lineId;
+        [SerializeField] private NPCInteract npcInteract;
+
         public bool IsConversationActive { get; private set; } = false;
         private NPCInteract currentNPC;
         private Dialogue currentDialogue;
@@ -41,7 +47,11 @@ namespace STM
         {
             npcPanel.SetActive(false);
             playerChoicePanel.SetActive(false);
-         
+
+            if (playOnAwake)
+            {
+                StartConversation(lineId, npcInteract);
+            }
         }
 
         void Update()
