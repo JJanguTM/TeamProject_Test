@@ -11,6 +11,8 @@ namespace STM
 
         [SerializeField] private List<STM.ManyToOneLever> forbiddenLeverList;
 
+
+
         private BoxCollider2D col;
         private Renderer rend;
 

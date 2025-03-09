@@ -8,6 +8,11 @@ namespace STM
     {
         private bool isActivated = true;
 
+        [Header("Camera Shake")]
+        [SerializeField] private CameraShakeController cameraShake;
+        [SerializeField] private float shakeIntensity = 5;
+        [SerializeField] private float shakeTime = 1;
+
         // ���� �������� ���� ���¿� �°� ����
         private void Start()
         {
@@ -19,6 +24,7 @@ namespace STM
         {
             isActivated = state;
             gameObject.SetActive(!isActivated);
+            cameraShake.ShakeCamera(shakeIntensity, shakeTime);
         }
     }
 }

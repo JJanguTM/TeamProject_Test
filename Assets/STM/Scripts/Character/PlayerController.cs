@@ -24,6 +24,8 @@ namespace STM
         // 상태값
         private bool isGrounded;
         private bool isJumping;
+
+        public bool isFacingRight { get; private set; } // 외부에서 접근만 가능, 수정은 불가
         private bool reachedApex;
 
         [Header("Sprites")]
@@ -92,10 +94,25 @@ namespace STM
                 }
                 rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
 
-                // 캐릭터 좌우 반전
-                Vector3 scale = transform.localScale;
-                scale.x = (direction.x < 0) ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
-                transform.localScale = scale;
+                // 캐릭터 좌우 반전 : rotation.y 를 180 <-> 0 을 왔다갔다 하게 함 by 휘익 0310
+                // 이렇게 하면 단순 스프라이트만 뒤집는게 아니라 캐릭터의 실제 transform.right를 뒤집게 됨
+                // Cinemachine의 X Offset은 transform.right을 추적 
+
+                
+                isFacingRight = (direction.x < 0) ? true : false;
+
+                
+                if (isFacingRight)
+                {
+                    Vector3 rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+                    transform.rotation = Quaternion.Euler(rotator);
+                }
+                else
+                {
+                    Vector3 rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+                    transform.rotation = Quaternion.Euler(rotator);
+                }
+                
             }
             else
             {
@@ -163,7 +180,7 @@ namespace STM
         private void UpdateSprite()
         {
          
-             Debug.Log($"isGrounded: {isGrounded}, velocityY: {rb.velocity.y}, isJumping: {isJumping}");
+            //Debug.Log($"isGrounded: {isGrounded}, velocityY: {rb.velocity.y}, isJumping: {isJumping}");
 
             // 만약 땅에서 떨어져있다면(점프 상태) => 상승/최고점/낙하 스프라이트
             if (!isGrounded)
