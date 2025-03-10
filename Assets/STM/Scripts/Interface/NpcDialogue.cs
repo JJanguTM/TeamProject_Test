@@ -8,53 +8,57 @@ namespace STM
     {
         [SerializeField] private DialogueManager dialogueManager;
 
-        [Header("´ëÈ­ ½ÃÀÛ LineID")]
-        [SerializeField] private string startLineID;
+        [Header("ëŒ€í™” ì‹œì‘ DialogID")]
+        [SerializeField] private string startDialogID;
 
-        [Header("ÇÃ·¹ÀÌ¾î ¼±ÅÃÁö(´ë´ä) LineIDs")]
-        [SerializeField] private List<string> choiceLineIDs = new List<string>(); // À¯µ¿ÀûÀÎ ¸®½ºÆ®·Î º¯°æ
+        [Header("í”Œë ˆì´ì–´ ì„ íƒì§€(ëŒ€ë‹µ) DialogIDs")]
+        [SerializeField] private List<string> choiceDialogIDs = new List<string>();
 
         /// <summary>
-        /// ÇÃ·¹ÀÌ¾î°¡ F Å° µîÀ» ´©¸£¸é ½ÇÇà
+        /// í”Œë ˆì´ì–´ê°€ F í‚¤ ë“±ì„ ëˆ„ë¥´ë©´ ì‹¤í–‰ë©ë‹ˆë‹¤.
+        /// ì§€ì •í•œ startDialogIDë¥¼ ê¸°ë°˜ìœ¼ë¡œ ëŒ€í™”ë¥¼ ì‹œì‘í•©ë‹ˆë‹¤.
         /// </summary>
         public void OnInteract()
         {
-            Debug.Log($"[NPCInteract] OnInteract() => StartConversation({startLineID}) on {gameObject.name}");
-            if (dialogueManager != null && !string.IsNullOrEmpty(startLineID))
+            Debug.Log($"[NPCInteract] OnInteract() => StartConversation({startDialogID}) on {gameObject.name}");
+            if (dialogueManager != null && !string.IsNullOrEmpty(startDialogID))
             {
-                dialogueManager.StartConversation(startLineID, this);
+                dialogueManager.StartConversation(startDialogID);
             }
             else
             {
-                Debug.LogWarning($"[NPCInteract] dialogueManager is null or startLineID is empty. startLineID={startLineID}");
+                Debug.LogWarning($"[NPCInteract] dialogueManagerê°€ nullì´ê±°ë‚˜ startDialogIDê°€ ë¹„ì–´ìˆìŠµë‹ˆë‹¤. startDialogID={startDialogID}");
             }
         }
 
         /// <summary>
-        /// À¯µ¿ÀûÀ¸·Î LineID¸¦ ¼¼ÆÃÇÒ ¼ö ÀÖ´Â ¸Ş¼­µå
+        /// ì„ íƒì§€ DialogIDë“¤ì„ ë™ì ìœ¼ë¡œ ì„¤ì •í•©ë‹ˆë‹¤.
         /// </summary>
-        public void SetChoiceLineIDs(List<string> newChoiceLineIDs)
+        public void SetChoiceDialogIDs(List<string> newChoiceDialogIDs)
         {
-            choiceLineIDs = newChoiceLineIDs;
-            Debug.Log($"[NPCInteract] SetChoiceLineIDs() called. New choices: {string.Join(", ", choiceLineIDs)}");
+            choiceDialogIDs = newChoiceDialogIDs;
+            Debug.Log($"[NPCInteract] SetChoiceDialogIDs() í˜¸ì¶œë¨. ìƒˆ ì„ íƒì§€: {string.Join(", ", choiceDialogIDs)}");
         }
 
-        public Dialogue[] GetChoiceDialogues(DialogueData data)
+        /// <summary>
+        /// DialogueManagerë¥¼ í†µí•´ ì„ íƒì§€ ëŒ€í™” ë°ì´í„°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+        /// </summary>
+        public Dialogue[] GetChoiceDialogues(DialogueManager manager)
         {
-            Debug.Log($"[NPCInteract] GetChoiceDialogues() called on {gameObject.name}. choiceLineIDs.Count={choiceLineIDs.Count}");
+            Debug.Log($"[NPCInteract] GetChoiceDialogues() í˜¸ì¶œë¨ on {gameObject.name}. ì„ íƒì§€ ê°œìˆ˜: {choiceDialogIDs.Count}");
 
-            Dialogue[] arr = new Dialogue[choiceLineIDs.Count];
+            Dialogue[] arr = new Dialogue[choiceDialogIDs.Count];
 
-            for (int i = 0; i < choiceLineIDs.Count; i++)
+            for (int i = 0; i < choiceDialogIDs.Count; i++)
             {
-                arr[i] = data.GetDialogueByID(choiceLineIDs[i]);
+                arr[i] = manager.GetDialogueByID(choiceDialogIDs[i]);
                 if (arr[i] == null)
                 {
-                    Debug.LogWarning($"[NPCInteract] choiceLineID={choiceLineIDs[i]} not found in DialogueData!");
+                    Debug.LogWarning($"[NPCInteract] choiceDialogID={choiceDialogIDs[i]}ì— í•´ë‹¹í•˜ëŠ” ëŒ€í™”ë¥¼ DialogueManagerì—ì„œ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
                 }
                 else
                 {
-                    Debug.Log($"[NPCInteract] Found dialogue for {choiceLineIDs[i]} => nextLine={arr[i].nextLine}");
+                    Debug.Log($"[NPCInteract] ì„ íƒì§€ ëŒ€í™” ë°œê²¬: {choiceDialogIDs[i]} => nextDialogID={arr[i].nextDialogID}");
                 }
             }
             return arr;

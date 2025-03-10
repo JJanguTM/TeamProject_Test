@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace STM
 {
     public class DialogueManager : MonoBehaviour
     {
-        [SerializeField] private DialogueData dialogueData;
+        [Header("Speaker & Dialogue Settings")]
+        [SerializeField] private SpeakerManager speakerManager;   // Speaker 정보를 조회할 매니저
+        [SerializeField] private DialogueData dialogueData;       // CSV 파일로부터 대화 데이터를 로드하는 컴포넌트
+        [SerializeField] private string startDialogID;              // 시작 대화 블록 ID
+        [SerializeField] private bool playOnAwake = true;           // 자동 시작 여부
 
         [Header("NPC Dialogue UI")]
         [SerializeField] private GameObject npcPanel;
@@ -15,48 +18,118 @@ namespace STM
         [SerializeField] private Text npcDialogueText;
         [SerializeField] private Image npcPortraitImage;
 
-        [Header("Typing Settings")]
-        [SerializeField] private float typingSpeed = 0.05f;
-
         [Header("Player Choice UI")]
         [SerializeField] private GameObject playerChoicePanel;
-        [SerializeField] private Text playerNameText;           
+        [SerializeField] private Text playerNameText;
         [SerializeField] private Image playerPortraitImage;
         [SerializeField] private Button[] choiceButtons;
         [SerializeField] private Text[] choiceButtonTexts;
 
-        [Header("Options")]
-        [SerializeField] private bool playOnAwake;
-        [SerializeField] private string lineId;
-        [SerializeField] private NPCInteract npcInteract;
+        [Header("Typing Settings")]
+        [SerializeField] private float typingSpeed = 0.05f;
 
-        public bool IsConversationActive { get; private set; } = false;
-        private NPCInteract currentNPC;
+        // 현재 진행 중인 대화 데이터
         private Dialogue currentDialogue;
         private int currentLineIndex = 0;
-        private bool isConversationActive = false;
+        public bool isConversationActive { get; private set; } = false;
 
+        // 타이핑 효과 관련 변수
         private bool isTyping = false;
         private float typingTimer = 0f;
         private int charIndex = 0;
         private string fullText = "";
 
-        private bool isInChoiceState = false;
-
-        void Start()
+        private void Start()
         {
             npcPanel.SetActive(false);
             playerChoicePanel.SetActive(false);
 
             if (playOnAwake)
             {
-                StartConversation(lineId, npcInteract);
+                StartConversation(startDialogID);
             }
         }
 
-        void Update()
+        /// <summary>
+        /// 지정한 dialogID를 기반으로 대화를 시작합니다.
+        /// </summary>
+        public void StartConversation(string dialogID)
         {
-            if (!isConversationActive) return;
+            // 플레이어 선택지 UI가 활성화되어 있다면 숨깁니다.
+            playerChoicePanel.SetActive(false);
+
+            currentDialogue = dialogueData.GetDialogueByID(dialogID);
+            if (currentDialogue == null)
+            {
+                EndConversation();
+                return;
+            }
+            isConversationActive = true;
+            currentLineIndex = 0;
+            ShowCurrentLine();
+
+            Debug.Log("nextDialogID: '" + currentDialogue.nextDialogID + "'");
+        }
+
+        /// <summary>
+        /// 현재 대화 블록의 대사 라인을 타이핑 효과와 함께 표시합니다.
+        /// 모든 라인 출력 후 nextDialogID에 따라 다음 동작을 결정합니다.
+        /// </summary>
+        private void ShowCurrentLine()
+        {
+            npcPanel.SetActive(true);
+            playerChoicePanel.SetActive(false);
+
+            // SpeakerManager를 통해 스피커 정보를 조회합니다.
+            var speaker = speakerManager.GetSpeakerByID(currentDialogue.charID);
+            if (speaker != null)
+            {
+                npcNameText.text = speaker.charName;
+                if (speaker.charPortrait != null)
+                {
+                    npcPortraitImage.sprite = speaker.charPortrait;
+                }
+                else
+                {
+                    Debug.LogWarning("Speaker 초상화가 없습니다. ID: " + currentDialogue.charID);
+                }
+            }
+            else
+            {
+                npcNameText.text = "알 수 없음";
+            }
+
+            // 현재 대화 블록의 모든 대사 라인이 출력되었으면 다음 단계를 처리합니다.
+            if (currentLineIndex >= currentDialogue.dialogueLines.Length)
+            {
+                if (string.IsNullOrEmpty(currentDialogue.nextDialogID))
+                {
+                    EndConversation();
+                    Debug.Log("??");
+                }
+                else if (currentDialogue.nextDialogID.StartsWith("answer"))
+                {
+                    // nextDialogID가 "answer" 패턴이면 플레이어 선택지를 표시합니다.
+                    ShowPlayerChoices(currentDialogue.nextDialogID);
+                }
+                else
+                {
+                    StartConversation(currentDialogue.nextDialogID);
+                }
+                return;
+            }
+
+            fullText = currentDialogue.dialogueLines[currentLineIndex];
+            npcDialogueText.text = "";
+            charIndex = 0;
+            typingTimer = 0f;
+            isTyping = true;
+        }
+
+        private void Update()
+        {
+            if (!isConversationActive)
+                return;
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -64,6 +137,7 @@ namespace STM
                 return;
             }
 
+            // 타이핑 효과 구현
             if (isTyping)
             {
                 typingTimer += Time.deltaTime;
@@ -82,210 +156,95 @@ namespace STM
                 }
             }
 
-            if (!isInChoiceState && Input.GetKeyDown(KeyCode.Return))
+            // Enter 키 입력: 타이핑 중이면 전체 텍스트 표시, 아니면 다음 대사로 진행
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                OnClickNextLine();
-            }
-        }
-
-        public void StartConversation(string lineID, NPCInteract npc)
-        {
-            currentNPC = npc;
-            isConversationActive = true;
-            isInChoiceState = false;
-            IsConversationActive = true;
-
-            Dialogue d = dialogueData.GetDialogueByID(lineID);
-            if (d == null)
-            {
-                EndConversation();
-                return;
-            }
-
-            currentDialogue = d;
-            currentLineIndex = 0;
-            ShowCurrentLine();
-        }
-
-        private void ShowCurrentLine()
-        {
-            npcPanel.SetActive(false);
-            playerChoicePanel.SetActive(false);
-            isInChoiceState = false;
-
-            if (currentDialogue == null)
-            {
-                EndConversation();
-                return;
-            }
-
-            if (currentLineIndex >= currentDialogue.lines.Length)
-            {
-                string nextLineID = currentDialogue.nextLine;
-
-                if (string.IsNullOrEmpty(nextLineID))
+                if (isTyping)
                 {
-                    EndConversation();
-                    return;
-                }
-
-                if (nextLineID == "finish")
-                {
-                    EndConversation();
-                    return;
-                }
-
-                if (nextLineID.StartsWith("answer"))
-                {
-                    ShowPlayerChoices(nextLineID);
-                    return;
-                }
-
-                Dialogue nextDialogue = dialogueData.GetDialogueByID(nextLineID);
-                if (nextDialogue != null && nextDialogue.dialogueType == "1")
-                {
-                    StartConversation(nextLineID, currentNPC);
-                    return;
-                }
-
-                StartConversation(nextLineID, currentNPC);
-                return;
-            }
-
-            if (currentDialogue.dialogueType == "0")
-            {
-                npcPanel.SetActive(true);
-                npcNameText.text = currentDialogue.charName;
-
-                if (!string.IsNullOrEmpty(currentDialogue.charPortrait))
-                {
-                    Sprite sp = Resources.Load<Sprite>("Portraits/" + currentDialogue.charPortrait);
-                    if (sp) npcPortraitImage.sprite = sp;
-                }
-
-                fullText = currentDialogue.lines[currentLineIndex];
-                npcDialogueText.text = "";
-                charIndex = 0;
-                typingTimer = 0f;
-                isTyping = true;
-            }
-        }
-
-        public void OnClickNextLine()
-        {
-            if (!isConversationActive || currentDialogue == null) return;
-
-            if (isTyping)
-            {
-                isTyping = false;
-                npcDialogueText.text = fullText;
-                return;
-            }
-
-            currentLineIndex++;
-
-            if (currentLineIndex >= currentDialogue.lines.Length)
-            {
-                string nextLineID = currentDialogue.nextLine;
-
-                if (string.IsNullOrEmpty(nextLineID))
-                {
-                    EndConversation();
-                    return;
-                }
-
-                if (nextLineID == "finish")
-                {
-                    EndConversation();
-                    return;
-                }
-
-                if (nextLineID.StartsWith("answer"))
-                {
-                    ShowPlayerChoices(nextLineID);
-                    return;
-                }
-
-                StartConversation(nextLineID, currentNPC);
-                return;
-            }
-
-            ShowCurrentLine();
-        }
-
-        private void ShowPlayerChoices(string answerID)
-        {
-            Debug.Log($"[ShowPlayerChoices] answerID={answerID} - 선택지 표시 시작");
-            isInChoiceState = true;
-            playerChoicePanel.SetActive(true);
-
-            List<Dialogue> choiceArray = dialogueData.GetChoiceDialoguesByAnswerID(answerID);
-
-            Debug.Log($"[ShowPlayerChoices] choiceArray.Count={choiceArray.Count}, choiceButtons.Length={choiceButtons.Length}");
-
-            // 🔄 **플레이어 이름과 이미지 설정**
-            if (choiceArray.Count > 0)
-            {
-                // 첫 번째 대사에서 플레이어 정보 가져옴
-                playerNameText.text = choiceArray[0].charName; // 🔄 CSV에서 charName 가져오기
-
-                if (!string.IsNullOrEmpty(choiceArray[0].charPortrait))
-                {
-                    Sprite playerSprite = Resources.Load<Sprite>("Portraits/" + choiceArray[0].charPortrait); // 🔄 CSV에서 charPortrait로 이미지 로드
-                    if (playerSprite)
-                        playerPortraitImage.sprite = playerSprite;
-                    else
-                        Debug.LogWarning($"플레이어 이미지 {choiceArray[0].charPortrait}가 없습니다!");
+                    isTyping = false;
+                    npcDialogueText.text = fullText;
                 }
                 else
                 {
-                    Debug.LogWarning("플레이어 이미지 정보가 없습니다!");
+                    currentLineIndex++;
+                    ShowCurrentLine();
                 }
             }
+        }
 
-            // 🔄 모든 버튼 초기화
-            foreach (var button in choiceButtons)
+        /// <summary>
+        /// 플레이어 선택지를 표시합니다.
+        /// answerID를 기반으로 DialogueData에서 선택지 대화 목록을 가져옵니다.
+        /// </summary>
+        private void ShowPlayerChoices(string answerID)
+        {
+            // CSV 기반 대화 데이터에서 선택지 대사 목록을 가져오는 메서드가 필요합니다.
+            // (예: DialogueData.GetChoiceDialoguesByAnswerID(answerID))
+            List<Dialogue> choices = dialogueData.GetChoiceDialoguesByAnswerID(answerID);
+            if (choices == null || choices.Count == 0)
             {
-                button.gameObject.SetActive(false);
-                button.onClick.RemoveAllListeners();
+                Debug.LogWarning("선택지 대화가 없습니다. answerID: " + answerID);
+                EndConversation();
+                return;
             }
 
-            // 🔄 선택지 표시
-            for (int i = 0; i < choiceArray.Count; i++)
+            isConversationActive = false; // 대화를 일시 중지합니다.
+            npcPanel.SetActive(false);
+            playerChoicePanel.SetActive(true);
+
+            // 플레이어 UI에 첫 번째 선택지 대사의 스피커 정보를 적용합니다.
+            var speaker = speakerManager.GetSpeakerByID(choices[0].charID);
+            if (speaker != null)
             {
-                if (i >= choiceButtons.Length)
+                playerNameText.text = speaker.charName;
+                if (speaker.charPortrait != null)
                 {
-                    Debug.LogWarning($"[ShowPlayerChoices] 선택지가 {choiceButtons.Length}개를 초과했습니다. 추가 버튼이 필요합니다.");
-                    break;
+                    playerPortraitImage.sprite = speaker.charPortrait;
                 }
+            }
+            else
+            {
+                playerNameText.text = "알 수 없음";
+            }
 
+            // 기존 선택지 버튼 초기화
+            for (int i = 0; i < choiceButtons.Length; i++)
+            {
+                choiceButtons[i].gameObject.SetActive(false);
+                choiceButtons[i].onClick.RemoveAllListeners();
+            }
+
+            // 각 선택지 버튼에 선택지 대화 내용을 할당합니다.
+            for (int i = 0; i < choices.Count && i < choiceButtons.Length; i++)
+            {
                 choiceButtons[i].gameObject.SetActive(true);
-                string lineText = choiceArray[i].lines.Length > 0 ? choiceArray[i].lines[0] : "";
-                choiceButtonTexts[i].text = lineText;
+                string choiceText = choices[i].dialogueLines.Length > 0 ? choices[i].dialogueLines[0] : "";
+                choiceButtonTexts[i].text = choiceText;
 
-                string nxt = choiceArray[i].nextLine;
+                string nextDialog = choices[i].nextDialogID;
                 choiceButtons[i].onClick.AddListener(() =>
                 {
-                    Debug.Log($"[ShowPlayerChoices] 선택지 클릭 - 다음 대화 {nxt}");
                     playerChoicePanel.SetActive(false);
-                    isInChoiceState = false;
-                    StartConversation(nxt, currentNPC);
+                    StartConversation(nextDialog);
                 });
             }
         }
 
-
-
-
+        /// <summary>
+        /// 대화를 종료하고 모든 UI를 숨깁니다.
+        /// </summary>
         private void EndConversation()
         {
-            IsConversationActive = false;
             isConversationActive = false;
-            currentDialogue = null;
             npcPanel.SetActive(false);
             playerChoicePanel.SetActive(false);
-            isTyping = false;
-            isInChoiceState = false;
+            Debug.Log("Dialogue ended, but why?");
+        }
+
+        // NPCInteract와의 호환성을 위한 메서드 (필요시)
+        public Dialogue GetDialogueByID(string dialogID)
+        {
+            return dialogueData.GetDialogueByID(dialogID);
         }
     }
 }

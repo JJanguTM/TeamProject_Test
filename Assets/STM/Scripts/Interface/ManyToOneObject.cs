@@ -7,45 +7,67 @@ namespace STM
     public class ManyToOneObject : MonoBehaviour
     {
      
-        [SerializeField]
-        private List<STM.ManyToOneLever> leverList;
+        [SerializeField] private List<STM.ManyToOneLever> leverList;
 
-        private bool isActivated = true;
+        [SerializeField] private List<STM.ManyToOneLever> forbiddenLeverList;
+
+
+
+        private BoxCollider2D col;
+        private Renderer rend;
+
+        private bool doorOpened = false;
 
         void Start()
         {
-            gameObject.SetActive(isActivated);
+            col = GetComponent<BoxCollider2D>();
+            rend = GetComponent<Renderer>();
         }
 
         void Update()
         {
-           
-            CheckAllLeverOn();
+            // 체크 결과에 따라 활성/비활성을 갱신
+            bool conditionMet = CheckAllConditions();
+
+            if (doorOpened != conditionMet)
+            {
+                doorOpened = conditionMet;
+                col.enabled = !conditionMet;
+                rend.enabled = !conditionMet;
+
+                if (conditionMet)
+                {
+                    Debug.Log("정답 레버들만 On이고, 금지 레버들은 Off! ManyToOneObject 활성화!");
+                }
+                else
+                {
+                    Debug.Log("금지 레버 On 발견 혹은 정답 레버 부족! ManyToOneObject 비활성화!");
+                }
+            }
         }
 
-        private void CheckAllLeverOn()
+        private bool CheckAllConditions()
         {
-          
-            bool allOn = true;
-
+            // 1) requiredLevers 리스트 모두 On 인지
             foreach (var lever in leverList)
             {
                 if (!lever.IsOn)
                 {
-                    allOn = false;
-                    break;
+                    return false; 
                 }
             }
 
-            if (allOn)
+            // 2) forbiddenLevers 리스트 중 하나라도 On이면 안 됨
+            foreach (var lever in forbiddenLeverList)
             {
-                gameObject.SetActive(!isActivated);
-                Debug.Log("��� Lever�� On ����! ManyToOneObject ��� ����!");
+                if (lever.IsOn)
+                {
+                    return false; 
+                }
             }
-            else
-            {
-           
-            }
+
+            // 여기까지 통과하면 “정답 레버들은 모두 On, 금지 레버는 모두 Off”
+            return true;
         }
     }
 }

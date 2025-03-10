@@ -1,0 +1,5 @@
+﻿lineID,dialogueType,charID,dialogueLine,nextDialogueID
+answer_01,1,chr000,이 곳 바람의 유적에 대해 알려줘.,LN010101
+answer_01,1,chr000,납치당한 주민들에 대해 알려줘.,LN010102
+answer_01,1,chr000,내 임무에 대해 다시 알려줘.,LN010103
+answer_01,1,chr000,궁금한 것이 없어.,LN010104

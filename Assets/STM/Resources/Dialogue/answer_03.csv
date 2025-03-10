@@ -1,0 +1,5 @@
+﻿lineID,dialogueType,charID,dialogueLine,nextDialogueID
+answer_03,1,chr000,우루스 단에 대해 알려주세요.,LN020104
+answer_03,1,chr000,아티팩트에 대해 알려주세요.,LN020105
+answer_03,1,chr000,유적의 비밀에 대해 알려주세요.,LN020106
+answer_03,1,chr000,궁금한 것이 없어요.,LN020107

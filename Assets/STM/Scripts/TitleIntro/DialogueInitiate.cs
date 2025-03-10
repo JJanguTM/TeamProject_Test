@@ -6,7 +6,7 @@ namespace STM
     public class DialogueInitiate : MonoBehaviour
     {
         [SerializeField] private DialogueManager dialogueManager;
-        [SerializeField] private string startLineID;
+        [SerializeField] private string dialogID;
         // [SerializeField] private NPCInteract npcReference; // NPCInteract를 사용한다면 주석 해제
 
         private bool hasInitiated = false;
@@ -21,7 +21,7 @@ namespace STM
                 if (dialogueManager != null)
                 {
                     // NPC가 필요 없다면 null로 넘기거나, 필요한 경우 npcReference 사용
-                    dialogueManager.StartConversation(startLineID, null /*npcReference*/);
+                    dialogueManager.StartConversation(dialogID);
                 }
                 else
                 {
@@ -35,7 +35,7 @@ namespace STM
             // DialogueManager가 할당되어 있고,
             // Conversation이 끝났다면(ESC나 finish 등 어떤 이유로든 EndConversation()이 호출됨)
             // 바로 씬 전환
-            if (dialogueManager != null && !dialogueManager.IsConversationActive)
+            if (dialogueManager != null && !dialogueManager.isConversationActive)
             {
                 // Main 씬으로 넘어가기
                 SceneManager.LoadScene("Main", LoadSceneMode.Single);
